@@ -11,8 +11,7 @@ import po.*;
 
 import java.util.ArrayList;
 
-import static com.codeborne.selenide.Selenide.open;
-import static com.codeborne.selenide.Selenide.page;
+import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 
 public class SwitchIngredientsTabTest {
@@ -38,11 +37,8 @@ public class SwitchIngredientsTabTest {
         password = userData.get(1);
         name = userData.get(2);
 
-//        Utils.logoutIfAuthorized(url);
-
         RegistrationNewUserPO registrationNewUserPO = open("https://stellarburgers.nomoreparties.site/register", RegistrationNewUserPO.class);
         registrationNewUserPO.registerNewUser(name, email, password,true);
-        System.out.println("Name = " + name + "  email = " + email + " password = " + password);
         AccountLoginPO accountLoginPO = page(AccountLoginPO.class);
        accountLoginPO.loginPersonalAccount(email,password);
 
@@ -53,19 +49,16 @@ public class SwitchIngredientsTabTest {
     @Test
     @DisplayName("Tab_Buns has been switched to successfully")
     public void testSwitchToTabBunsSuccessfully() {
-//        AppHeaderLinkPO appHeaderLinkPO = open(url,AppHeaderLinkPO.class);
         AppHeaderLinkPO appHeaderLinkPO = page(AppHeaderLinkPO.class);
         appHeaderLinkPO.openBurgerConstructor();
         BurgerConstructorPO burgerConstructorPO = page(BurgerConstructorPO.class);
-        burgerConstructorPO.fillingsClick();
-        burgerConstructorPO.bunsClick();
 
-        WebDriver webDriver = getWebDriver();
-        burgerConstructorPO.moveBunToConstructor(webDriver);
+        burgerConstructorPO.scrollToFillings();
+        burgerConstructorPO.scrollToBuns();
+        refresh();
 
-        Assert.assertTrue("Tab Buns hasn't been switched to successfully because of" +
-                " content is not available to BurgerConstructor. " +
-                "Required top bun is not in a Burger Constructor ", burgerConstructorPO.ingredientsInConstructorIs("Флюоресцентная булка R2-D3 (верх)"));
+        Assert.assertTrue("Scroll to the certain Bun haven't been switched to bunsSection",
+                burgerConstructorPO.sectionBunsIsAvailable());
     }
 
 
@@ -76,34 +69,33 @@ public class SwitchIngredientsTabTest {
         appHeaderLinkPO.openBurgerConstructor();
 
         BurgerConstructorPO burgerConstructorPO = page(BurgerConstructorPO.class);
-        burgerConstructorPO.sauceClick();
-
-        WebDriver webDriver = getWebDriver();
-        burgerConstructorPO.moveSauceToConstructor(webDriver);
+        burgerConstructorPO.scrollToSauces();
 
         Assert.assertTrue("Tab Sauces haven't been switched to successfully because of" +
-                " content is not available to BurgerConstructor. " +
-                "Required sauce is not in a Burger Constructor ", burgerConstructorPO.ingredientsInConstructorIs("Соус Spicy-X"));
-
+                        " content is not available to BurgerConstructor. " +
+                        "Required sauce is not in a Burger Constructor ",
+                burgerConstructorPO.sectionSaucesIsAvailable());
     }
+
+
 
     @Test
     @DisplayName("Following to Fillings has been done successfully")
-    public void testFollowingToFillingsSuccessfully() {
-        AppHeaderLinkPO appHeaderLinkPO = page(AppHeaderLinkPO.class);
+    public void testFollowingToFillingsByScrollSuccessfully() {
+       AppHeaderLinkPO appHeaderLinkPO = page(AppHeaderLinkPO.class);
         appHeaderLinkPO.openBurgerConstructor();
 
         BurgerConstructorPO burgerConstructorPO = page(BurgerConstructorPO.class);
-        burgerConstructorPO.fillingsClick();
-
-        WebDriver webDriver = getWebDriver();
-        burgerConstructorPO.moveFillingToConstructor(webDriver);
+        burgerConstructorPO.scrollToFillings();
 
         Assert.assertTrue("Tab Fillings haven't been switched to successfully because of" +
-                " content is not available to BurgerConstructor. " +
-                "Required sauce is not in a Burger Constructor ",
-                burgerConstructorPO.ingredientsInConstructorIs("Мясо бессмертных моллюсков Protostomia"));
+                        " content is not available to BurgerConstructor. " +
+                        "Required sauce is not in a Burger Constructor ",
+                burgerConstructorPO.sectionFillingsIsAvailable());
     }
+
+
+
 
 @After
     public void logout(){

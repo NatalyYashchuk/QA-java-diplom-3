@@ -43,7 +43,6 @@ public class UserLoginTest {
 
         RegistrationNewUserPO registrationNewUserPO = open("https://stellarburgers.nomoreparties.site/register", RegistrationNewUserPO.class);
         registrationNewUserPO.registerNewUser(name, email, password,true);
-        System.out.println("Name = " + name + "  email = " + email + " password = " + password);
 
     }
 

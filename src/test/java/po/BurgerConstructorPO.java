@@ -31,9 +31,9 @@ public class BurgerConstructorPO {
     @FindBy(how = How.XPATH, using = "//section[contains(@class, 'BurgerIngredients_ingredients')]//div[contains(@class, 'tab_tab')]//span[text()='Булки']")
     private SelenideElement bunsButton;
 
-//    // локатор Button "Булки" выбранные
-//    @FindBy(how = How.XPATH, using = "//span[contains(text(), 'Булки')]/../..//div[contains(@class, 'tab_tab_type_current__2BEPc')]")
-//    private SelenideElement bunsSelected;
+    // локатор Раздел выбран
+    @FindBy(how = How.XPATH, using = "//div[contains(@class, 'tab_tab__1SPyG tab_tab_type_current__2BEPc pt-4')]")
+    private SelenideElement sectionSelected;
 
 
     // локатор Button "Соусы"
@@ -57,13 +57,22 @@ public class BurgerConstructorPO {
     @FindBy(how = How.XPATH, using = "//p[text()='Флюоресцентная булка R2-D3']/..//img")
     private SelenideElement bun1;
 
+
     // локатор ингредиент вкладка Соусы "Соус Spicy-X"
         @FindBy(how = How.XPATH, using = "//p[text()='Соус Spicy-X']/..//img")
     private SelenideElement sauce1;
 
+    // локатор ингредиент вкладка Соусы "Соус с шипами Антарианского плоскоходца"
+    @FindBy(how = How.XPATH, using = "//p[text()='Соус с шипами Антарианского плоскоходца']/..//img")
+    private SelenideElement sauce2;
+
     // локатор ингредиент вкладка Начинки "Мясо бессмертных моллюсков Protostomia"
     @FindBy(how = How.XPATH, using = "//p[text()='Мясо бессмертных моллюсков Protostomia']/..//img")
     private SelenideElement filling1;
+
+    // локатор ингредиент вкладка Начинки "Филе Люминесцентного тетраодонтимформа"
+    @FindBy(how = How.XPATH, using = "//p[text()='Филе Люминесцентного тетраодонтимформа']/..//img")
+    private SelenideElement filling2;
 
     // локатор  "Перетяните булочку сюда (верх)" выбранные
         @FindBy(how = How.XPATH, using = "//span[contains(text(), 'Перетяните булочку сюда (верх)')]")
@@ -88,6 +97,62 @@ public class BurgerConstructorPO {
     @FindBy(how = How.XPATH, using = "(//section[contains(@class, 'BurgerConstructor_basket')]" +
             "//span[contains(@class, 'constructor-element__row')]/span)[3]")
     private SelenideElement fillingsInConstructor;
+
+    @Step ("Scroll to buns")
+    public void scrollToBuns (){
+        bun1.scrollIntoView(false);
+        bun1.shouldBe(Condition.visible, Duration.ofSeconds(10000));
+    }
+
+    @Step("Section_Fillings content should be available - true.")
+    public Boolean sectionBunsIsAvailable(){
+        bun1.shouldBe(Condition.enabled, Duration.ofSeconds(10000));
+        String sectionName = sectionSelected.getText();
+        Boolean fillingIsAvailable = false;
+        if(sectionName.equals("Булки")){
+            fillingIsAvailable = true;
+        }
+        return  fillingIsAvailable;
+    }
+
+
+
+    @Step ("Scroll to fillings")
+    public void scrollToFillings (){
+        filling2.scrollIntoView(false);
+        filling2.shouldBe(Condition.visible, Duration.ofSeconds(10000));
+    }
+
+    @Step("Section_Fillings content should be available - true.")
+    public Boolean sectionFillingsIsAvailable(){
+        filling2.shouldBe(Condition.enabled, Duration.ofSeconds(10000));
+        String sectionName = sectionSelected.getText();
+        Boolean fillingIsAvailable = false;
+        if(sectionName.equals("Начинки")){
+            fillingIsAvailable = true;
+        }
+        return  fillingIsAvailable;
+    }
+
+
+
+    @Step ("Scroll to Sauces")
+    public void scrollToSauces (){
+        sauce2.scrollIntoView(false);
+        sauce2.shouldBe(Condition.visible, Duration.ofSeconds(10000));
+    }
+
+    @Step("Section_Sauces content should be available - true.")
+    public Boolean sectionSaucesIsAvailable(){
+        sauce2.shouldBe(Condition.enabled, Duration.ofSeconds(10000));
+        String sectionName = sectionSelected.getText();
+        Boolean SaucesIsAvailable = false;
+        if(sectionName.equals("Соусы")){
+            SaucesIsAvailable = true;
+        }
+        return  SaucesIsAvailable;
+    }
+
 
 
     @Step("Check an ingerient in the burger_constructor_list")
@@ -122,21 +187,6 @@ public class BurgerConstructorPO {
     @Step("Get Fillins Name in burger_constructor_list")
     public String getBurgerConstructorFilling(){
         return fillingsInConstructor.getText();
-    }
-
-    @Step("Move the bun to the burger_constructor to check the buns are available")
-    public void moveBunToConstructor(WebDriver driver){
-        Utils.moveTo(driver,bun1, burgerConstructor);
-    }
-
-    @Step("Move the sauce to the burger_constructor")
-    public void moveSauceToConstructor(WebDriver driver){
-        Utils.moveTo(driver,sauce1, burgerConstructor);
-    }
-
-    @Step("Move the filling to the burger_constructor")
-    public void moveFillingToConstructor(WebDriver driver){
-        Utils.moveTo(driver,filling1, burgerConstructor);
     }
 
 
